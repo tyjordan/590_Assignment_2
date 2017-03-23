@@ -5,8 +5,8 @@
 <distributions>
 	<linear		name="linear_anisotropic" datatype="double" a="-1" b="1" fa="0" fb="0.6667"/>
 	<uniform    name="isotropic scatter" datatype="double" a="-1.0" b="1.0"/>
-	<uniform_spherical	name="pos dist" datatype="point" x0="0" y0="0" z0="0" r0="1" R="2"/>
-	<isotropic      name="dir dist" datatype="point"/>
+	<uniform_disk	name="pos dist" datatype="point" axis="z" x0="-1" y0="0" z0="-5" r0="0" R="2"/>
+	<delta      name="dir dist" datatype="point" x="0" y="0" z="1" />
 </distributions>
 
 <nuclides>

@@ -421,8 +421,6 @@ int main()
     std::string type = e.name();
     std::string name = e.attribute("name").value();
 	double mult = e.attribute("estimator_multiplier").as_double();
-
-	std::cout << "mult = " << mult << std::endl;
     
     std::shared_ptr< estimator > Est;
     if ( type == "current" ) {
@@ -483,12 +481,9 @@ int main()
 
 	if(mult != 0)
 		Est->set_multiplier(mult);
-	std::cout << "mult = " << mult << std::endl;
-	std::cout << "m = " << Est->multiplier() << std::endl;
     estimators.push_back( Est );
   }
 
-	std::cout << "estimator check = " << estimators.size() << std::endl;
   // create source
   pugi::xml_node input_source = input_file.child("source");
   pugi::xml_node input_source_position  = input_source.child("position");
@@ -559,9 +554,7 @@ int main()
                 // determine if boundary interaction
                 if ( transDist == distToBound ) { // boundary interaction
                     // advance to surface and apply crossSurface method from Surface class
-					std::cout << rayIntersect.first->name() << " crossed" << std::endl;
                     rayIntersect.first->crossSurface( &p, transDist );
-					std::cout << "did we make it?" << std::endl;
                     
                     FindCurrentCell ( &p , &cells );
                       currentCell = p.cellPointer();

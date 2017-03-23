@@ -1,6 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 
-<nsamples n="10000"/>
+<nsamples n="100000"/>
 
 <distributions>
 	<linear		name="linear_anisotropic" datatype="double" a="-1" b="1" fa="0" fb="0.6667"/>
