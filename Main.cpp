@@ -68,6 +68,7 @@ int main()
   }
 
   unsigned long long NSamples = input_file.child("nsamples").attribute("n").as_ullong();
+  bool split_roulette = input_file.child("variance_reduction").attribute("split_and_roulette").as_bool();
 
   // distributuions
   std::vector< std::shared_ptr< distribution<double> > >  double_distributions;
@@ -512,13 +513,11 @@ int main()
 
 
 
-
-
   
 
     clock_t init, final;
     init=clock();
-    int count = 0;
+    int track_count = 0;
 
     // Begin loop over histories
     for ( int n = 1; n <= NSamples; n++ ) {
@@ -536,7 +535,6 @@ int main()
 
 
             while ( p.alive() ) {
-
                 // find distance to nearest boundary
                 std::pair < std::shared_ptr < surface > , double > rayIntersect = 
                     currentCell->surfaceIntersect( p.getRay() );
@@ -546,29 +544,48 @@ int main()
                 // find distance to collision
                 double distToCollision = -std::log( Urand() )/(currentCell->macro_xs());
                 // std::cout << distToCollision << std::endl;
-
                 double transDist = std::fmin( distToCollision , distToBound );
                 // move particle to new location
                 currentCell->moveParticle( &p , transDist );
+				if( split_roulette ) {
+					track_count++;
+				}
 				currentCell->scoreEstimators( &p, transDist );
+
                 // determine if boundary interaction
                 if ( transDist == distToBound ) { // boundary interaction
                     // advance to surface and apply crossSurface method from Surface class
+					double prevImportance = currentCell->getImportance();
                     rayIntersect.first->crossSurface( &p, transDist );
-                    
                     FindCurrentCell ( &p , &cells );
-                      currentCell = p.cellPointer();
-                    // kill particle if region has importace of zero
-                    if ( currentCell->getImportance() <= 0.0 ) {
-                        p.kill();
-                    }
+                    currentCell = p.cellPointer();
 
+					if( split_roulette ) {
 
+						double r = ( currentCell->getImportance() ) / prevImportance;
+
+						if( r < 1 ) {
+							if( Urand() < r ) {
+							 	p.adjustWeight( 1 / r );
+							}
+							else {
+								p.kill();
+							}
+						}
+						else if(r > 1) {
+							int split_num = std::floor( r + Urand() );
+							for(int i = 0; i < split_num; i++)
+							{
+								bank.emplace( p.pos(), p.dir() );
+								bank.top().adjustWeight( p.wgt() / split_num );
+							}
+							p.kill();
+						}
+					}
                 }
                 else { // collision
                     // sample collision
                     currentCell->sampleCollision( &p , &bank );
-
                     // rayIntersect.first->scoreEstimators( &p );
 
                 }
@@ -579,18 +596,17 @@ int main()
             // current->endHistory();
 
         } // end while bank !empty loop
-        for (auto e: estimators) { e->endHistory();count++;}
+        for (auto e: estimators) { e->endHistory(); }
 
 
 
 
     } // end for loop over number of histories
 	
-    for (auto e: estimators) { e->report(); }
+    for (auto e: estimators) { e->report( track_count ); }
 
     final=clock()-init;
     std::cout << "Run time: " << (double)final / ((double)CLOCKS_PER_SEC) << " seconds" << std::endl;
-    std::cout << count << std::endl;
 
     return 0;
 }

@@ -122,11 +122,11 @@ point uniform_disk_dist::sample() {
 	double r = std::sqrt( r0_sq + ( diff * Urand() ) );
 	double phi = twopi * Urand();
 
-	if( axis == "i" )
+	if( axis == "x" )
 		return point( center.x, center.y + ( r * std::cos(phi) ), center.z + ( r * std::sin(phi) ) );
-	else if( axis == "j" )
+	else if( axis == "y" )
 		return point( center.x + ( r * std::cos(phi) ), center.y, center.z + ( r * std::sin(phi) ) );
-	else if( axis == "k" )
+	else if( axis == "z" )
 		return point( center.x + ( r * std::cos(phi) ), center.y + ( r * std::sin(phi) ), center.z );
 	else
 		return point( std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );

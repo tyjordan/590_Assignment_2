@@ -16,10 +16,10 @@ class estimator {
   private:
     std::string estimator_name;
   protected:
-	double m = 1;
+	double m;
     unsigned long long nhist;
   public:
-     estimator( std::string label ) : estimator_name(label) {};
+     estimator( std::string label ) : estimator_name(label) { m = 1; };
     ~estimator() {};
 
     virtual std::string name() final { return estimator_name; };
@@ -30,7 +30,7 @@ class estimator {
     virtual void score( particle*, double ) = 0;
 
     virtual void endHistory()       = 0;
-    virtual void report()           = 0;
+    virtual void report( int T )           = 0;
 };
 
 class single_valued_estimator : public estimator {
@@ -56,10 +56,16 @@ class single_valued_estimator : public estimator {
 
      virtual void score( particle*, double ) = 0;
 
-     virtual void report() final {
+     virtual void report( int T ) final {
        double mean = tally_sum / nhist;
        double var  = ( tally_squared / nhist - mean*mean ) / nhist;
-       std::cout << name() << "   " << mean << "   " << std::sqrt( var ) / mean << std::endl;  
+		if( T == 0 ) {
+       		std::cout << name() << "   " << mean << "   " << std::sqrt( var ) / mean << std::endl;
+		}
+		else {
+			std::cout << name() << "   " << mean << "   " << std::sqrt( var ) / mean << std::endl;
+			std::cout << "		FOM: " << 1 / ( var * T ) << std:: endl;
+		}
      };
 
 };
@@ -93,7 +99,7 @@ class counting_estimator : public estimator {
 
     void score( particle*, double);
     void endHistory();
-    void report();
+    void report( int T );
 };
 
 #endif

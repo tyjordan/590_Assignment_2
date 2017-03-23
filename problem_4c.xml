@@ -75,7 +75,7 @@
 	<current name="front face current">
 		<surface name="front detector face"/>
 	</current>
-	<cell_pathLengthFlux_estimator name="detector scalar flux" estimator_multiplier="2.95">
+	<cell_pathLengthFlux_estimator name="detector scalar flux" estimator_multiplier="0.295">
 		<cell name="detector" />
 	</cell_pathLengthFlux_estimator>
 </estimators>

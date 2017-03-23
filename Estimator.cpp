@@ -20,7 +20,7 @@ void counting_estimator::endHistory() {
   count_hist = 0;
 }
 
-void counting_estimator::report() {
+void counting_estimator::report( int T ) {
   std::cout << name() << std::endl;
   double s1 = 0.0, s2 = 0.0;
   for ( int i = 0 ; i < tally.size() ; i++ ) {
