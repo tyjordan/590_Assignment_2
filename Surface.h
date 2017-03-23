@@ -29,7 +29,7 @@ class surface {
 
     void crossSurface( particle* p, double d ) { 
       // score estimators
-      for ( std::shared_ptr< estimator > e : surface_estimators ) { e->score( p, d ); }
+      for ( auto e : surface_estimators ) { e->score( p, d ); }
       // reflect if needed
       if ( reflect_bc ) { 
         point d = reflect( p->getRay() );

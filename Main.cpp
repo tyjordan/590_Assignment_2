@@ -55,8 +55,9 @@ int main()
 
     // user enters the XML file name and pugixml will attempt to load
   std::string input_file_name;
-  std::cout << " Enter XML input file name: " << std::endl;
+  std::cout << std::endl << "Enter XML input file name:  ";
   std::cin  >> input_file_name;
+	std::cout << std::endl;
 
   pugi::xml_document input_file;
   pugi::xml_parse_result load_result = input_file.load_file( input_file_name.c_str() );
@@ -512,12 +513,13 @@ int main()
 
 
 
-
   
 
     clock_t init, final;
     init=clock();
     int track_count = 0;
+
+	int s = 0;
 
     // Begin loop over histories
     for ( int n = 1; n <= NSamples; n++ ) {
@@ -547,9 +549,7 @@ int main()
                 double transDist = std::fmin( distToCollision , distToBound );
                 // move particle to new location
                 currentCell->moveParticle( &p , transDist );
-				if( split_roulette ) {
-					track_count++;
-				}
+				track_count++;
 				currentCell->scoreEstimators( &p, transDist );
 
                 // determine if boundary interaction
@@ -574,6 +574,7 @@ int main()
 						}
 						else if(r > 1) {
 							int split_num = std::floor( r + Urand() );
+							s += split_num;
 							for(int i = 0; i < split_num; i++)
 							{
 								bank.emplace( p.pos(), p.dir() );
@@ -581,6 +582,9 @@ int main()
 							}
 							p.kill();
 						}
+					}
+					else if( currentCell->getImportance() == 0 ) {
+						p.kill();
 					}
                 }
                 else { // collision
@@ -597,11 +601,14 @@ int main()
 
         } // end while bank !empty loop
         for (auto e: estimators) { e->endHistory(); }
-
-
+ 
+		if( ( n % (int) std::floor( NSamples * 0.1 ) ) == 0 ) {
+			std::cout << "	" << n << " histories completed" << std::endl;
+		}
 
 
     } // end for loop over number of histories
+	std::cout << std::endl;
 	
     for (auto e: estimators) { e->report( track_count ); }
 

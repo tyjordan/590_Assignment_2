@@ -64,7 +64,7 @@ class single_valued_estimator : public estimator {
 		}
 		else {
 			std::cout << name() << "   " << mean << "   " << std::sqrt( var ) / mean << std::endl;
-			std::cout << "		FOM: " << 1 / ( var * T ) << std:: endl;
+			std::cout << "		FOM: " << 1 / ( ( var / ( mean * mean ) ) * T ) << std:: endl;
 		}
      };
 

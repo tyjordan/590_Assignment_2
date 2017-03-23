@@ -56,13 +56,13 @@
 	<surface name="top face" sense="-1"/>
 	<surface name="bottom face" sense="+1"/>
   </cell>
-  <cell name="sec 2" material="matA" importance="19.0">
+  <cell name="sec 2" material="matA" importance="50.0">
 	<surface name="absorber left" sense="+1"/>
 	<surface name="absorber top" sense="+1"/>
     <surface name="top face" sense="-1"/>
 	<surface name="right face" sense="-1"/>
   </cell>
-  <cell name="sec 3" material="matA" importance="120.0">
+  <cell name="sec 3" material="matA" importance="80.0">
 	<surface name="absorber top" sense="-1"/>
 	<surface name="absorber right" sense="+1"/>
 	<surface name="right face" sense="-1"/>
