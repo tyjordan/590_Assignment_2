@@ -43,7 +43,7 @@ void FindCurrentCell ( particle* p , std::vector < std::shared_ptr < cell > >* v
 
 int main() 
 {
-    //*
+    //Initialize problem variables
     double err = 1000.0 * std::numeric_limits < double > ::epsilon();
 
     unsigned long long NSamples;
@@ -62,41 +62,37 @@ int main()
 
     std::shared_ptr< source > src;
 
+	//Read XML input
     Input_Problem_Data( &NSamples , &split_roulette , &double_distributions ,
                         &int_distributions , &point_distributions , &nuclides ,
                         &materials , &surfaces , &cells , &estimators , &src);
 
   
+	//Transport loop:
 
     clock_t init, final;
     init=clock();
-    int track_count = 0;
+    int track_count = 0;	//Count number of tracks for Figure of Merit
 
     // Begin loop over histories
     for ( int n = 1; n <= NSamples; n++ ) {
 
         std::stack < particle > bank = src->sample();
-        // std::stack < particle > bank = initSource->sample();
-
 
         while ( ! bank.empty() ) {
             particle p = bank.top() ; bank.pop();
             // find cell particle is in
             FindCurrentCell ( &p , &cells );
             std::shared_ptr < cell > currentCell = p.cellPointer();
-            // std::cout << currentCell->name() << std::endl;
-
 
             while ( p.alive() ) {
                 // find distance to nearest boundary
                 std::pair < std::shared_ptr < surface > , double > rayIntersect = 
                     currentCell->surfaceIntersect( p.getRay() );
                 double distToBound  = rayIntersect.second;
-                // std::cout << distToBound << std::endl;
 
                 // find distance to collision
                 double distToCollision = -std::log( Urand() )/(currentCell->macro_xs());
-                // std::cout << distToCollision << std::endl;
                 double transDist = std::fmin( distToCollision , distToBound );
                 // move particle to new location
                 currentCell->moveParticle( &p , transDist );
@@ -111,11 +107,12 @@ int main()
                     FindCurrentCell ( &p , &cells );
                     currentCell = p.cellPointer();
 
+					//Particle splitting and rouletting based on cell importances
 					if( split_roulette ) {
 
 						double r = ( currentCell->getImportance() ) / prevImportance;
 
-						if( r < 1 ) {
+						if( r < 1 ) { //roulette
 							if( Urand() < r ) {
 							 	p.adjustWeight( 1 / r );
 							}
@@ -123,7 +120,7 @@ int main()
 								p.kill();
 							}
 						}
-						else if(r > 1) {
+						else if(r > 1) { //split
 							int split_num = std::floor( r + Urand() );
 							for(int i = 0; i < split_num; i++)
 							{
@@ -133,25 +130,22 @@ int main()
 							p.kill();
 						}
 					}
-					else if( currentCell->getImportance() == 0 ) {
+					else if( currentCell->getImportance() == 0 ) { //allows for problem truncation when
+							//splitting and rouletting is disabled
 						p.kill();
 					}
                 }
                 else { // collision
                     // sample collision
                     currentCell->sampleCollision( &p , &bank );
-                    // rayIntersect.first->scoreEstimators( &p );
-
                 }
 
             } // end while particle alive loop
 
-            
-            // current->endHistory();
-
         } // end while bank !empty loop
-        for (auto e: estimators) { e->endHistory(); }
+        for (auto e: estimators) { e->endHistory(); } //resolve estimators and the end of each history
  
+		//simulation progress output
 		if( ( n % (int) std::floor( NSamples * 0.1 ) ) == 0 ) {
 			std::cout << "	" << n << " histories completed" << std::endl;
 		}

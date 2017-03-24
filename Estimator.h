@@ -16,7 +16,7 @@ class estimator {
   private:
     std::string estimator_name;
   protected:
-	double m;
+	double m;	//estimator multiplier
     unsigned long long nhist;
   public:
      estimator( std::string label ) : estimator_name(label) { m = 1; };
@@ -56,7 +56,7 @@ class single_valued_estimator : public estimator {
 
      virtual void score( particle*, double ) = 0;
 
-     virtual void report( int T ) final {
+     virtual void report( int T ) final { //T is the number of particle tracks for FOM calculation
        double mean = tally_sum / nhist;
        double var  = ( tally_squared / nhist - mean*mean ) / nhist;
 		if( T == 0 ) {

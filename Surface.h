@@ -71,6 +71,8 @@ class sphere : public surface {
      point  reflect( ray r );
 };
 
+//cylinders centered on axes:
+
 class x_cylinder : public surface {
 	private:
 		point pos;

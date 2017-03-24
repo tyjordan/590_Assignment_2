@@ -181,6 +181,9 @@ class independentXYZ_distribution : public distribution<point> {
     point sample();
 };
 
+//spherical distribution of points uniform in volume
+	//r0 ==> minimum radius
+	//R ==> maximum radius
 class uniform_spherical_dist : public distribution<point> {
 	private:
 		point center;
@@ -194,6 +197,10 @@ class uniform_spherical_dist : public distribution<point> {
 		point sample();
 };
 
+//distribution of points on a disk uniform in area
+	//axis ==> perpendicular to disk (defines orientation
+	//r0 ==> minimum radius
+	//R ==> maximum radius
 class uniform_disk_dist : public distribution<point> {
 	private:
 		std::string axis;

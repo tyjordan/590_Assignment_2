@@ -60,7 +60,9 @@ void Input_Problem_Data
     throw;
   }
 
+//specify number of histories
   *NSamples = input_file.child("nsamples").attribute("n").as_ullong();
+//toggle particle splitting and rouletting
   *split_roulette = input_file.child("variance_reduction").attribute("split_and_roulette").as_bool();
 
   // distributuions
@@ -243,7 +245,6 @@ void Input_Problem_Data
   }
 
   // iterate over nuclides
-  // std::vector< std::shared_ptr<nuclide> > nuclides;
   pugi::xml_node input_nuclides = input_file.child("nuclides");
   for ( auto n : input_nuclides ) {
     std::string name = n.attribute("name").value();
@@ -290,7 +291,6 @@ void Input_Problem_Data
   } 
 
   // iterate over materials
-  // std::vector< std::shared_ptr<material> > materials;
   pugi::xml_node input_materials = input_file.child("materials");
   for ( auto m : input_materials ) {
     std::string name = m.attribute("name").value();
@@ -311,7 +311,6 @@ void Input_Problem_Data
   }
 
   // iterate over surfaces
-  // std::vector< std::shared_ptr< surface > > surfaces;
   pugi::xml_node input_surfaces = input_file.child("surfaces");
   for ( auto s : input_surfaces ) {
     std::string type = s.name();
@@ -359,7 +358,6 @@ void Input_Problem_Data
   }
 
   // iterate over cells
-  // std::vector< std::shared_ptr< cell > > cells;
   pugi::xml_node input_cells = input_file.child("cells");
   for ( auto c : input_cells ) {
     std::string name = c.attribute("name").value();
@@ -407,7 +405,6 @@ void Input_Problem_Data
   }
 
   // iterate over estimatators
-  // std::vector< std::shared_ptr< estimator > > estimators;
   pugi::xml_node input_estimators = input_file.child("estimators");
   for ( auto e : input_estimators ) {
     std::string type = e.name();
@@ -471,7 +468,7 @@ void Input_Problem_Data
       throw;
     }
 
-	if(mult != 0)
+	if(mult != 0) //update estimator multiplier if specified in xml input
 		Est->set_multiplier(mult);
     estimators->push_back( Est );
   }
@@ -486,8 +483,7 @@ void Input_Problem_Data
 
   std::shared_ptr< distribution< point > > posDist = findByName( *point_distributions, pos_dist_name );
   std::shared_ptr< distribution< point > > dirDist = findByName( *point_distributions, dir_dist_name );
-
-  // std::shared_ptr< source > src;  
+  
   if ( posDist && dirDist ) {
     *src = std::make_shared< source > ( posDist, dirDist );  
   }

@@ -114,7 +114,7 @@
 </cells>
 
 <estimators>
-	<cell_pathLengthFlux_estimator name="detector scalar flux" estimator_multiplier="0.295">
+	<cell_pathLengthFlux_estimator name="detector absorption rate" estimator_multiplier="0.295">
 		<cell name="detector" />
 	</cell_pathLengthFlux_estimator>
 </estimators>
