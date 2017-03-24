@@ -2,6 +2,7 @@
 #include <string>
 #include <cmath>
 #include <limits>
+#include <memory>
 
 #include "Distribution.h"
 #include "Point.h"

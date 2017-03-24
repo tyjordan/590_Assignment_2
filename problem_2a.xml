@@ -1,8 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 
-<simulation name="problem 2a" type="fixed source">
-  <histories start="1" end="10000000" />
-</simulation>
+<nsamples n="10000000"/>
 
 <distributions>
   <linear      name="ang source" datatype="double" a = "0.0" b = "1.0" fa = "0.0" fb = "2.0" />

@@ -1,8 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 
-<simulation name="problem 1b" type="fixed source">
-  <histories start="1" end="10000000" />
-</simulation>
+<nsamples n="10000000"/>
 
 <distributions>
   <delta name="pos dist" datatype="point" x = "1.0e-9" y = "0.0" z = "0.0" />

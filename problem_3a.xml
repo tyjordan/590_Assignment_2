@@ -1,8 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 
-<simulation name="problem 3a" type="fixed source">
-  <histories start="1" end="10000000" />
-</simulation>
+<nsamples n="10000000"/>
 
 <distributions>
   <independentXYZ   name="pos dist" datatype="point" x = "uniform x" y = "delta y-z" z = "delta y-z" />

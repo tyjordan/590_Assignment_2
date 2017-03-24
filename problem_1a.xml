@@ -1,6 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 
-<nsamples n="1000000"/>
+<nsamples n="10000000"/>
 
 <distributions>
   <delta name="pos dist" datatype="point" x = "1.0e-9" y = "0.0" z = "0.0" />
